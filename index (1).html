@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabio Pani — Technicien Systèmes & Réseaux</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #f4f6fb;
+    --darker: #eaecf4;
+    --accent: #2563eb;
+    --accent2: #16a36a;
+    --text: #1a1f2e;
+    --muted: #5a6177;
+    --card: #ffffff;
+    --border: #d8dce8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(244,246,251,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(37,99,235,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(22,163,106,0.06) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+  }
+  .hero-content { position: relative; max-width: 700px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    border: 1px solid rgba(37,99,235,0.3);
+    padding: 0.4rem 0.9rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-tag::before { content: '●'; font-size: 0.5rem; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  h1 {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  h1 span { color: var(--accent); }
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 520px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .btn {
+    padding: 0.85rem 1.8rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--darker);
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #6fa3f9; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-stats {
+    margin-top: 4rem;
+    display: flex; gap: 3rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat-num {
+    font-size: 2rem; font-weight: 800; color: var(--accent);
+    font-family: 'Space Mono', monospace;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTIONS */
+  section { padding: 5rem 3rem; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+  }
+
+  /* ABOUT */
+  .about { background: var(--darker); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 1100px;
+  }
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .about-text p strong { color: var(--text); }
+  .skills-grid {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+  }
+  .skill-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+  .skill-tag.accent { border-color: rgba(37,99,235,0.4); color: var(--accent); }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.8rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover { border-color: rgba(37,99,235,0.3); transform: translateY(-3px); }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .project-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+  .project-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .project-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(37,99,235,0.07);
+    border: 1px solid rgba(37,99,235,0.2);
+    border-radius: 2px;
+    color: var(--accent);
+  }
+  .project-card.wip { opacity: 0.6; }
+  .wip-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent2);
+    margin-bottom: 0.5rem;
+  }
+  .wip-badge::before { content: '◉'; font-size: 0.5rem; animation: pulse 1.5s ease-in-out infinite; }
+  .project-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1.2rem; flex-wrap: wrap; gap: 0.8rem; }
+  .project-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid rgba(37,99,235,0.3);
+    padding: 0.35rem 0.8rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .project-link:hover { background: rgba(37,99,235,0.1); }
+  .project-link.disabled { color: var(--muted); border-color: var(--border); pointer-events: none; }
+
+  /* EXPERIENCE */
+  .experience { background: var(--darker); }
+  .timeline { max-width: 700px; }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 1px 1fr;
+    gap: 0 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+  .timeline-line {
+    background: var(--border);
+    position: relative;
+  }
+  .timeline-line::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 50%;
+    transform: translateX(-50%);
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+  }
+  .timeline-content { padding-bottom: 1rem; }
+  .timeline-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .timeline-role { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .timeline-org { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.7rem; }
+  .timeline-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+  /* CONTACT */
+  .contact-box {
+    max-width: 600px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3rem;
+  }
+  .contact-box p { color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex; align-items: center; gap: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-link-icon { font-size: 1.1rem; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    section { padding: 3.5rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stats { gap: 2rem; }
+    .contact-box { padding: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">fabiopani97</div>
+  <div class="nav-links">
+    <a href="#projets">Projets</a>
+    <a href="#experience">Expérience</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Disponible pour un stage / alternance</div>
+    <h1>Fabio<br><span>Pani</span></h1>
+    <p class="hero-sub">
+      Technicien Systèmes &amp; Réseaux en formation — passionné par l'administration Windows, les réseaux et l'infrastructure IT. En reconversion depuis 2026, je construis mes compétences projet après projet.
+    </p>
+    <div class="hero-cta">
+      <a href="#projets" class="btn btn-primary">Voir mes projets</a>
+      <a href="#contact" class="btn btn-outline">Me contacter</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">5</div>
+        <div class="stat-label">Projets réalisés</div>
+      </div>
+      <div>
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Ans d'expérience pro</div>
+      </div>
+      <div>
+        <div class="stat-num">Île-de-France</div>
+        <div class="stat-label">Localisation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label">// à propos</div>
+  <h2 class="section-title">Qui suis-je ?</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        Titulaire d'une <strong>Licence en Administration Économique et Sociale</strong>, j'ai travaillé plusieurs années dans des environnements internationaux — chez Uber à Lisbonne et TikTok — avant de me reconvertir vers les métiers de l'IT en 2026.
+      </p>
+      <p>
+        Je suis actuellement en formation <strong>Technicien Systèmes &amp; Réseaux</strong> chez OpenClassrooms (Titre RNCP Niveau 4), où je construis des compétences concrètes à travers des projets pratiques : déploiement Windows, Active Directory, réseaux TCP/IP, PowerShell...
+      </p>
+      <p>
+        Curieux, méthodique et autonome, je recherche un <strong>stage ou une alternance</strong> pour mettre mes compétences en pratique au sein d'une équipe IT.
+      </p>
+    </div>
+    <div>
+      <div class="section-label" style="margin-bottom:1rem;">// compétences</div>
+      <div class="skills-grid">
+        <span class="skill-tag accent">Windows Server</span>
+        <span class="skill-tag accent">Active Directory</span>
+        <span class="skill-tag accent">DHCP / DNS</span>
+        <span class="skill-tag accent">TCP/IP</span>
+        <span class="skill-tag">PowerShell</span>
+        <span class="skill-tag">VirtualBox / VMware</span>
+        <span class="skill-tag">Linux (bases)</span>
+        <span class="skill-tag">VLAN</span>
+        <span class="skill-tag">GPO</span>
+        <span class="skill-tag">Support N1/N2</span>
+        <span class="skill-tag">Sécurisation postes</span>
+        <span class="skill-tag">ITIL (notions)</span>
+      </div>
+      <div class="section-label" style="margin-top:2rem; margin-bottom:1rem;">// langues</div>
+      <div class="skills-grid">
+        <span class="skill-tag accent">Français — natif</span>
+        <span class="skill-tag">Anglais — B2</span>
+        <span class="skill-tag">Portugais — A2</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETS -->
+<section id="projets">
+  <div class="section-label">// formation openclassrooms</div>
+  <h2 class="section-title">Projets réalisés</h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-num">PROJET 01</div>
+      <div class="project-title">Définir mon projet professionnel</div>
+      <p class="project-desc">Analyse du secteur IT, identification des compétences cibles et élaboration d'un plan de reconversion vers les métiers de technicien systèmes &amp; réseaux.</p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="project-tag">Veille métier</span>
+          <span class="project-tag">Projet pro</span>
+        </div>
+        <a href="projet-02.html" class="project-link">Voir le projet →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">PROJET 02</div>
+      <div class="project-title">Déploiement poste Windows 11</div>
+      <p class="project-desc">Installation et configuration automatisée d'un poste de travail Windows 11 : paramétrage système, sécurisation, installation d'applicatifs métier.</p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="project-tag">Windows 11</span>
+          <span class="project-tag">Déploiement</span>
+          <span class="project-tag">Configuration</span>
+        </div>
+        <a href="projet-02.html" class="project-link">Voir le projet →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">PROJET 03</div>
+      <div class="project-title">Réseau LAN filaire &amp; Wi-Fi</div>
+      <p class="project-desc">Mise en place d'une infrastructure réseau locale : adressage IP, VLAN, ACL, configuration de switches et points d'accès Wi-Fi.</p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="project-tag">TCP/IP</span>
+          <span class="project-tag">VLAN</span>
+          <span class="project-tag">ACL</span>
+          <span class="project-tag">Wi-Fi</span>
+        </div>
+        <a href="projet-03.html" class="project-link">Voir le projet →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">PROJET 04</div>
+      <div class="project-title">Gestion de parc informatique</div>
+      <p class="project-desc">Reconditionnement de postes, industrialisation de la configuration, inventaire et standardisation d'un parc de machines sous Windows.</p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="project-tag">Parc IT</span>
+          <span class="project-tag">Standardisation</span>
+          <span class="project-tag">Windows</span>
+        </div>
+        <a href="projet-04.html" class="project-link">Voir le projet →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="wip-badge">En cours</div>
+      <div class="project-num">PROJET 05</div>
+      <div class="project-title">Domaine Active Directory</div>
+      <p class="project-desc">Création et administration d'un domaine Active Directory : comptes utilisateurs, unités d'organisation (OU), stratégies de groupe (GPO), DHCP et DNS sous Windows Server.</p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="project-tag">Active Directory</span>
+          <span class="project-tag">GPO</span>
+          <span class="project-tag">DHCP</span>
+          <span class="project-tag">DNS</span>
+          <span class="project-tag">Windows Server</span>
+        </div>
+        <a href="https://openclassrooms.com/fr/paths/1051/projects/3587" target="_blank" class="project-link disabled">En cours...</a>
+      </div>
+    </div>
+
+    <div class="project-card wip">
+      <div class="project-num">PROJETS 06 → 14</div>
+      <div class="project-title">À venir...</div>
+      <p class="project-desc">PowerShell &amp; automatisation, supervision réseau, ITIL, support utilisateur, sécurité des systèmes...</p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="project-tag">PowerShell</span>
+          <span class="project-tag">ITIL</span>
+          <span class="project-tag">Sécurité</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-label">// parcours</div>
+  <h2 class="section-title">Expérience</h2>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-period">Mars 2026 → en cours</div>
+        <div class="timeline-role">Technicien Systèmes &amp; Réseaux (formation)</div>
+        <div class="timeline-org">OpenClassrooms — RNCP Niveau 4</div>
+        <div class="timeline-desc">Formation en alternance projet par projet : déploiement Windows, Active Directory, réseaux, PowerShell, virtualisation.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-period">Déc. 2024 → Déc. 2025</div>
+        <div class="timeline-role">Coordinateur Logistique &amp; Événementiel</div>
+        <div class="timeline-org">La Cravate Solidaire — Paris</div>
+        <div class="timeline-desc">Organisation d'événements solidaires, gestion de stocks, animation d'ateliers en partenariat avec des grandes entreprises.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-period">Juin 2023 → Nov. 2024</div>
+        <div class="timeline-role">Social Operations Response Team</div>
+        <div class="timeline-org">Uber — Lisbonne</div>
+        <div class="timeline-desc">Surveillance des réseaux sociaux, gestion de crises en temps réel, développement de stratégies de communication.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-period">Nov. 2020 → Déc. 2021</div>
+        <div class="timeline-role">Modérateur de contenu</div>
+        <div class="timeline-org">TikTok — Lisbonne</div>
+        <div class="timeline-desc">Modération à grande échelle, gestion de situations sensibles, rigueur et réactivité.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">// contact</div>
+  <h2 class="section-title">Me contacter</h2>
+  <div class="contact-box">
+    <p>Je suis à la recherche d'un <strong style="color:var(--text)">stage ou d'une alternance</strong> en Île-de-France dans le domaine des systèmes &amp; réseaux. N'hésitez pas à me contacter !</p>
+    <div class="contact-links">
+      <a href="mailto:fabiopani@hotmail.fr" class="contact-link">
+        <span class="contact-link-icon">✉</span>
+        fabiopani@hotmail.fr
+      </a>
+      <a href="tel:0668819450" class="contact-link">
+        <span class="contact-link-icon">☏</span>
+        06 68 81 94 50
+      </a>
+      <a href="https://github.com/fabiopani97" target="_blank" class="contact-link">
+        <span class="contact-link-icon">⌥</span>
+        github.com/fabiopani97
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Fabio Pani — Technicien Systèmes &amp; Réseaux</p>
+</footer>
+
+</body>
+</html>
