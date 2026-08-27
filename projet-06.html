@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projet 06 — Automatisation PowerShell AD | Fabio Pani</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #f4f6fb; --darker: #eaecf4; --accent: #2563eb; --accent2: #16a36a;
+    --text: #1a1f2e; --muted: #5a6177; --card: #ffffff; --border: #d8dce8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--dark); color: var(--text); font-family: 'Syne', sans-serif; }
+  .page { max-width: 800px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+  .back-link { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 2.2rem; font-weight: 800; margin: 1.5rem 0 0.5rem; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 2.5rem; }
+  .project-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.7rem; background: rgba(37,99,235,0.07); border: 1px solid rgba(37,99,235,0.2); border-radius: 2px; color: var(--accent); }
+  h2 { font-size: 1.3rem; font-weight: 700; margin: 2.5rem 0 1rem; }
+  p, li { color: var(--muted); line-height: 1.75; font-size: 0.95rem; }
+  ul { margin-left: 1.2rem; margin-bottom: 1rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 0.85rem; }
+  th, td { border: 1px solid var(--border); padding: 0.6rem 0.8rem; text-align: left; }
+  th { background: var(--darker); font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+  pre { background: #11151f; color: #e6e9f0; padding: 1.2rem; border-radius: 6px; overflow-x: auto; font-family: 'Space Mono', monospace; font-size: 0.8rem; margin: 1rem 0 2rem; }
+  .files { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+  .file-link { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text); text-decoration: none; padding: 0.7rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
+  .file-link:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="page">
+  <a href="index.html#projets" class="back-link">← Retour aux projets</a>
+  <h1>Projet 06 — Automatisation PowerShell AD</h1>
+  <p class="subtitle">Scripts d'automatisation pour la gestion quotidienne des comptes Active Directory</p>
+  <div class="project-tags">
+    <span class="project-tag">PowerShell</span>
+    <span class="project-tag">Active Directory</span>
+    <span class="project-tag">RSAT</span>
+    <span class="project-tag">Automatisation</span>
+  </div>
+
+  <h2>Contexte</h2>
+  <p>Dans le cadre de ma formation Technicien Systèmes & Réseaux, ce projet vise à automatiser deux tâches récurrentes du support N1/N2 sur un annuaire Active Directory : le déblocage de comptes utilisateurs et la création de comptes à partir d'un export RH.</p>
+
+  <h2>Script 1 — Déverrouillage & réinitialisation de mot de passe</h2>
+  <p>Automatise le déverrouillage d'un compte bloqué et la réinitialisation de son mot de passe (saisie sécurisée via SecureString). Chaque action est journalisée et les erreurs (compte introuvable, droits insuffisants, mot de passe non conforme) sont interceptées sans interrompre le script.</p>
+  <pre>$NouveauMDP = Read-Host "Entrez le nouveau mot de passe" -AsSecureString
+try {
+    Set-ADAccountPassword -Identity $Identifiant -Reset -NewPassword $NouveauMDP -ErrorAction Stop
+    Write-Log -Identifiant $Identifiant -Message "Reinitialisation MDP : SUCCES"
+} catch {
+    Write-Log -Identifiant $Identifiant -Message "Reinitialisation MDP : ECHEC - $PSItem"
+}</pre>
+
+  <h2>Script 2 — Création de comptes AD depuis un CSV RH</h2>
+  <p>Automatise la création quotidienne de comptes utilisateurs à partir d'un fichier CSV simulant un export RH. Le script vérifie l'existence de chaque compte avant création (idempotence), place l'utilisateur dans la bonne OU, l'ajoute au groupe de sécurité correspondant, et journalise chaque action sans interrompre le traitement des autres lignes en cas d'erreur.</p>
+  <pre>foreach ($Ligne in $ListeUtilisateurs) {
+    try { Get-ADUser -Identity $Ligne.SamAccountName -ErrorAction Stop; $ExisteDeja = $true }
+    catch { $ExisteDeja = $false }
+    if ($ExisteDeja) { Write-Log ... ; continue }
+    $OUCible = Get-ADOrganizationalUnit -Filter "Name -eq '$($Ligne.OU)'"
+    New-ADUser -Path $OUCible.DistinguishedName -AccountPassword $MotDePasse ...
+    Add-ADGroupMember -Identity $Ligne.Group -Members $Ligne.SamAccountName
+}</pre>
+  <p>Le script est conçu pour être planifié via le Planificateur de tâches Windows, exécuté par un compte de service disposant de droits délégués (principe du moindre privilège), et non de droits d'administration globaux.</p>
+
+  <h2>Sécurité & bonnes pratiques</h2>
+  <ul>
+    <li>Les mots de passe ne sont jamais écrits en clair dans les logs (conversion en SecureString)</li>
+    <li>Gestion d'erreurs try/catch sur chaque opération à risque, sans interruption du traitement global</li>
+    <li>Journalisation complète (date, identifiant, action, résultat) pour la traçabilité</li>
+    <li>Principe du moindre privilège pour le compte d'exécution</li>
+  </ul>
+
+  <h2>Fichiers du projet</h2>
+  <div class="files">
+    <a href="projet-06/Deverrouillage-ResetMDP.ps1" class="file-link">📄 Deverrouillage-ResetMDP.ps1</a>
+    <a href="projet-06/Documentation-Deverrouillage-ResetMDP.pdf" class="file-link">📄 Documentation — Déverrouillage & Reset MDP</a>
+    <a href="projet-06/CreationComptesAD.ps1" class="file-link">📄 CreationComptesAD.ps1</a>
+    <a href="projet-06/Documentation-CreationComptesAD.pdf" class="file-link">📄 Documentation — Création comptes AD</a>
+  </div>
+</div>
+</body>
+</html>
